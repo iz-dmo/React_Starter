@@ -1,8 +1,16 @@
 import './App.css';
 import { ProductList } from './components/ProductList';
 import { ProductCard } from './components/ProductCard';
+import { ProductFilter } from './components/ProductFilter';
+import { useState } from 'react';
 
 function App() {
+  const[filters,setFilters] = useState(
+    {
+      minPrice : 0,
+      maxPrice : 999,
+    }
+  )
   const products = [
     {
       imageSrc: "images/iphone15pro.webp",
@@ -29,11 +37,6 @@ function App() {
     
   ];
 
-  function handlePurchase(product) {
-    // const stockCount = product.stockCount - 1;  
-    // product.stockCount = stockCount;
-    // alert(`You clicked on ${product.title} which costs ${product.price}`);
-  }
 
   return (
     <div>
@@ -45,10 +48,11 @@ function App() {
           />
         ))}
       </ProductList>
+      <h2 className='App'>Product Filter by Price</h2>
+      <ProductFilter filters={filters} onFilter={handleFilter}/>
       <hr/>
-      <h2 className='App'>Product which cost up to $1000</h2>
       <ul className='App'>
-        {products.filter(({price}) => price < 1000)
+        {products.filter(({price}) => price >= filters.minPrice && price <= filters.maxPrice)
           .map(({title,price}) => (
             <li style={{ listStyle: "none", padding: 0 }} key={title}>{title} costs ${price}</li>
           ))
@@ -57,6 +61,18 @@ function App() {
       
     </div>
   );
+
+  // function parts
+
+  function handlePurchase(){
+    
+  }
+
+   function handleFilter(key,value){
+    setFilters((prevFilters)=>({
+      ...prevFilters,[key]:value
+    }))
+  }
 }
 
 export default App;
